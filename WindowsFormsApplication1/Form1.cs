@@ -8,12 +8,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing.Printing;
+using System.Diagnostics;
+using System.Threading;
 
 namespace WindowsFormsApplication1
 {
     public partial class Form1 : Form
     {
-
         public Form1()
         {
             InitializeComponent();
@@ -22,11 +23,27 @@ namespace WindowsFormsApplication1
         private void Form1_Load(object sender, EventArgs e)
         {
 
+            //SplashWindowのタイマー
+            SplashForm splash = new SplashForm();
+            splash.Show();
+            splash.Refresh();
+
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            Thread.Sleep(2000);
+            sw.Stop();
+
+            splash.Close();
+            splash.Dispose();
+
+            this.Activate();
+
+            statusStrip1.Visible = false;
         }
 
         private void ヘルプhの表示ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            System.Diagnostics.Process.Start("https://fum1.github.io/Euthanasia.com/");
         }
 
         private void CreateButton_Click(object sender, EventArgs e)
@@ -36,7 +53,8 @@ namespace WindowsFormsApplication1
 
         private void QuitButton_Click(object sender, EventArgs e)
         {
-            this.Close();
+            DialogResult result = MessageBox.Show("終了しますか？","終了",MessageBoxButtons.YesNo,MessageBoxIcon.Warning,MessageBoxDefaultButton.Button1);
+            if(result == DialogResult.Yes) this.Close();
         }
 
         private void Save_Click(object sender, EventArgs e)
@@ -138,6 +156,49 @@ namespace WindowsFormsApplication1
         private void delete_Click(object sender, EventArgs e)
         {
             TextBox.Clear();
+        }
+
+        private void バージョン情報ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AboutBox1 aboutbox = new AboutBox1();
+            aboutbox.ShowDialog();
+        }
+
+        private void 取り消しToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TextBox.Redo();
+        }
+
+        private void すべて選択ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TextBox.SelectAll();
+        }
+
+        private void 日付と日時ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TextBox.AppendText(DateTime.Today.ToString());
+        }
+
+        private void statusStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
+
+        private void TextBox_TextChanged(object sender, EventArgs e)
+        {
+            statusBar.Text = TextBox.TextLength.ToString();
+        }
+
+        private void ステータスバーToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (statusStrip1.Visible)
+            {
+                statusStrip1.Visible = false;
+            }
+            else
+            {
+                statusStrip1.Visible = true;
+            }
         }
     }
 }
